@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Limits</title>
+    <link rel="stylesheet" href="../stylesheets/limits_style.css">
+    <script src="../scripts/limits_script.js" defer></script>
+</head>
+
+<body>
+    <h1>Limits Method</h1>
+    <section class="lab">
+        <div class="panel">
+
+            <h1 class="panel-header">Configuration</h1>
+
+            <div class="panel-body">
+
+                <div class="control">
+                    <label for="frequency">Frequency</label>
+                    <select id="frequency">
+                        <option value="250">250 Hz</option>
+                        <option value="500">500 Hz</option>
+                        <option value="1000" selected>1000 Hz</option>
+                        <option value="2000">2000 Hz</option>
+                        <option value="4000">4000 Hz</option>
+                        <option value="8000">8000 Hz</option>
+                    </select>
+                </div>
+
+
+                <div class="control">
+                    <label for="step">Step Size</label>
+
+                    <select id="step">
+                        <option value="1">1 dB</option>
+                        <option value="2">2 dB</option>
+                        <option value="5" selected>5 dB</option>
+                        <option value="10">10 dB</option>
+                    </select>
+                </div>
+
+
+            </div>
+        </div>
+
+
+        <div class="panel">
+
+            <div class="stimulus">
+                <h1 class="panel-header">Stimulus</h1>
+                <img src="../images/patient.png" alt="" id="patientImg">
+            </div>
+
+            <div class="response-box">
+                <div class="negative response" id="negative">✕ Not Heard</div>
+                <div class="positive response" id="positive">✓ Heard</div>
+            </div>
+
+            <div class="present-box">
+                <button id="presentBtn">Present</button>
+            </div>
+            <div class="slider-box">
+                <button class="int-btn" id="decreaseBtn">−</button>
+
+                <input class="int-ctrl" id="intValue" type="number" value="10">
+
+                <button class="int-btn" id="increaseBtn">+</button>
+
+            </div>
+        </div>
+
+        <div class="panel results">
+            <h1 class="panel-header">Results</h1>
+            <div class="result-box">
+                <p>Name: <span id="patientName">Alex</span></p>
+                <p>Gender: <span id="patientGender">Male</span></p>
+                <button id="newPatientBtn">New Patient</button>
+                <label for="estimate">Type your guess!</label>
+                <div class="estimate-holder">
+                    <input id="estimate" class="estimate-ctrl" type="number" placeholder="0">
+                    <button id="confirmBtn">Confirm</button>
+                </div>
+                <p id="feedback" class="off">Correct! Congrats!</p>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>

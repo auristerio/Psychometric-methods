@@ -1,0 +1,227 @@
+:root {
+    --bg: #f4f6f8;
+    --surface: #ffffff;
+    --surface-2: #f8fafc;
+    --border: #dce2e8;
+    --text: #18212b;
+    --muted: #6b7682;
+    --accent: #2563eb;
+    --accent-light: #eff6ff;
+    --success: #16803c;
+    --danger: #c62828;
+    --warning: #b7791f;
+    --radius: 12px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+.lab {
+    display: grid;
+    grid-template-columns: 250px minmax(450px, 1fr) 300px;
+    gap: 18px;
+}
+
+.panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.panel-header {
+    padding: 15px 17px;
+    border-bottom: 1px solid var(--border);
+    font-weight: 650;
+    font-size: 14px;
+}
+
+.panel-body {
+    padding: 17px;
+}
+
+.control {
+    margin-bottom: 20px;
+}
+
+.control:last-child {
+    margin-bottom: 0;
+}
+
+label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+
+select,
+input[type="number"] {
+    width: 100%;
+    height: 38px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0 10px;
+    background: white;
+    color: var(--text);
+    font-size: 13px;
+}
+
+.segmented {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.segmented button {
+    border: 0;
+    background: white;
+    padding: 9px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.segmented button.active {
+    background: var(--accent-light);
+    color: var(--accent);
+    font-weight: 650;
+}
+
+.stimulus {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    height: 70%;
+    margin-bottom: 0px;
+}
+
+.response-box {
+    display: flex;
+    justify-content: center;
+    gap: 50%;
+}
+
+.present-box {
+    display: flex;
+    justify-content: center;
+}
+
+#presentBtn {
+    border-radius: 50%;
+    padding: 20px;
+}
+
+.response {
+    border: 1px black solid;
+    border-radius: var(--radius);
+    padding: 10px;
+    margin: 10px;
+}
+
+.int-btn {
+    height: 40%;
+}
+
+.slider-box {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    height: 100px;
+    margin-bottom: 20px;
+}
+
+.result-box {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#newPatientBtn {
+    width: 59%;
+    align-self: center;
+}
+
+input.int-ctrl {
+    width: 40%;
+}
+
+#confirmBtn {
+    display: inline-block;
+    width: 30%;
+}
+
+#feedback {
+    display: none;
+}
+
+#feedback.on {
+    display: block;
+}
+
+.estimate-holder {
+    display: flex;
+    gap: 20px;
+}
+
+input.estimate-ctrl {
+    width: 40%;
+    display: inline-block;
+}
+
+.intensity-control {
+    color: red;
+}
+
+.active-response.positive {
+    background-color: var(--success);
+    color: white;
+}
+
+.active-response.negative {
+    background-color: var(--danger);
+    color: white;
+}
+
+#patientImg {
+    align-self: center;
+    height: 70%;
+    width: 40%;
+    border: 1px black solid;
+}
+
+@media (max-width: 1050px) {
+    .lab {
+        grid-template-columns: 220px 1fr;
+    }
+
+    .results {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 720px) {
+    main {
+        padding: 20px 15px;
+    }
+
+    .lab {
+        grid-template-columns: 1fr;
+    }
+
+    .results {
+        grid-column: auto;
+    }
+}

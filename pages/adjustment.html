@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adjustment</title>
+    <link rel="stylesheet" href="../stylesheets/adjustment_style.css">
+    <script src="../scripts/adjustment_script.js" defer></script>
+</head>
+
+<body>
+    <h1>Adjustment Method</h1>
+    <section class="lab">
+        <div class="panel">
+
+            <h1 class="panel-header">Intensity</h1>
+
+            <div class="panel-body">
+                <div class="sweep-box">
+                    <img src="../images/releasing.png" id="handImage" alt="">
+                    <p id="sweep"><span id="sweepValue">70</span>dB HL</p>
+                    <div class="indicator-box">
+                        <p class="indicator" id="ascendBox">Ascending</p>
+                        <p class="indicator" id="descendBox">Descending</p>
+                    </div>
+                    <div class="sidebar">
+                    <button id="mainStartBtn">Start</button>
+                    <button id="newPatientBtn">New Patient</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="panel results">
+            <h1 class="panel-header">Results</h1>
+            <div id="plot"></div>
+        </div>
+    </section>
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+</body>
+
+</html>
