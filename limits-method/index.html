@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f1eb">
+  <title>Method of Limits — Audiology Lab</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div>
+      <p class="eyebrow">AUDIOLOGY TEACHING LAB</p>
+      <h1>Method of Limits</h1>
+      <p class="subtitle">Auditory threshold estimation · Educational simulation</p>
+    </div>
+    <div class="header-mark" aria-hidden="true">ML<span> / </span>01</div>
+  </header>
+
+  <main class="page-shell">
+    <section class="top-grid" aria-label="Patient and test configuration">
+      <section class="panel patient-panel">
+        <div class="section-heading"><span class="section-index">01</span><h2>Patient</h2></div>
+        <div class="patient-name-row">
+          <h3 id="patientName">No patient loaded</h3>
+          <span id="patientBadge" class="badge muted">Awaiting patient</span>
+        </div>
+        <dl class="patient-details">
+          <div><dt>Age</dt><dd id="patientAge">—</dd></div>
+          <div><dt>Sex</dt><dd id="patientSex">—</dd></div>
+          <div class="complaint"><dt>Chief complaint</dt><dd id="patientComplaint">Import a JSON patient or generate a synthetic patient to begin.</dd></div>
+        </dl>
+        <div class="patient-actions">
+          <button class="button secondary" id="importButton" type="button">Import patient</button>
+          <button class="button secondary" id="randomButton" type="button">Random patient</button>
+          <input id="patientFile" type="file" accept=".json,application/json" hidden>
+        </div>
+        <p id="patientMessage" class="inline-message" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="panel config-panel">
+        <div class="section-heading"><span class="section-index">02</span><h2>Test configuration</h2></div>
+        <label class="field-label" for="targetEar">Target ear</label>
+        <select id="targetEar">
+          <option value="right_ear">Right ear</option>
+          <option value="left_ear">Left ear</option>
+        </select>
+        <label class="field-label" for="targetFrequency">Target frequency</label>
+        <select id="targetFrequency">
+          <option value="250">250 Hz</option><option value="500">500 Hz</option>
+          <option value="1000" selected>1000 Hz</option><option value="2000">2000 Hz</option>
+          <option value="4000">4000 Hz</option><option value="8000">8000 Hz</option>
+        </select>
+        <label class="field-label" for="stepSize">Step size</label>
+        <select id="stepSize">
+          <option value="5" selected>5 dB</option><option value="2">2 dB</option><option value="1">1 dB</option>
+        </select>
+        <p class="helper">Changing ear or frequency resets only the active run after confirmation. Earlier run histories remain available.</p>
+      </section>
+
+      <section class="panel method-panel">
+        <div class="section-heading"><span class="section-index">03</span><h2>Run setup</h2></div>
+        <label class="field-label" for="runDirection">Run direction</label>
+        <select id="runDirection"><option value="ascending">Ascending</option><option value="descending">Descending</option></select>
+        <label class="field-label" for="startLevel">Starting stimulus (dB HL)</label>
+        <input id="startLevel" type="number" min="-10" max="120" step="1" value="0">
+        <button class="button primary full-width" id="startRunButton" type="button">Start new run</button>
+        <p class="helper">Ascending: begin below the expected threshold. Descending: begin above it. The student manually adjusts levels and records their own estimate.</p>
+      </section>
+    </section>
+
+    <section class="workspace-grid" aria-label="Threshold testing workspace">
+      <section class="panel run-panel">
+        <div class="section-heading"><span class="section-index">04</span><h2>Current run</h2></div>
+        <div class="run-summary">
+          <div><span class="summary-label">Run</span><strong id="currentRunNumber">—</strong></div>
+          <div><span class="summary-label">Direction</span><strong id="currentRunDirection">—</strong></div>
+          <div><span class="summary-label">Presentations</span><strong id="presentationCount">0</strong></div>
+        </div>
+        <div class="status-line"><span id="runStatusDot" class="status-dot"></span><span id="runStatus">No active run</span></div>
+        <p class="helper">Each press of Present creates one response and one history entry. Adjusting the level alone does not present a tone.</p>
+        <div class="history-heading"><h3>Run history</h3><span id="historyCount" class="count-label">0 entries</span></div>
+        <div class="table-scroll history-scroll">
+          <table class="history-table">
+            <thead><tr><th>#</th><th>dB HL</th><th>Ear</th><th>Hz</th><th>Response</th></tr></thead>
+            <tbody id="historyBody"><tr><td colspan="5" class="empty-cell">Start a run and present a stimulus to populate history.</td></tr></tbody>
+          </table>
+        </div>
+        <div class="all-runs">
+          <h3>Previous runs</h3>
+          <div id="previousRuns" class="previous-runs"><p class="empty-note">No previous runs.</p></div>
+        </div>
+      </section>
+
+      <section class="panel stimulus-panel">
+        <div class="section-heading"><span class="section-index">05</span><h2>Stimulus presentation</h2></div>
+        <div class="stimulus-context"><span id="stimulusEar">Right ear</span><span class="context-separator">·</span><span id="stimulusFrequency">1000 Hz</span></div>
+        <div class="level-display" aria-live="polite"><span id="stimulusLevel">0</span><small>dB HL</small></div>
+        <div class="level-controls">
+          <button id="minusButton" class="level-adjust" type="button" aria-label="Decrease stimulus level">−</button>
+          <span class="adjust-hint">Adjust level</span>
+          <button id="plusButton" class="level-adjust" type="button" aria-label="Increase stimulus level">+</button>
+        </div>
+        <button id="presentButton" class="button present-button" type="button" disabled>Present</button>
+        <p class="helper centered">Present the current level to obtain one simulated patient response.</p>
+        <div class="response-grid" aria-live="polite">
+          <div id="positiveIndicator" class="response-indicator positive">
+            <span class="indicator-symbol" aria-hidden="true">✓</span>
+            <div><strong>Positive</strong><p>Patient detected the tone</p></div>
+          </div>
+          <div id="negativeIndicator" class="response-indicator negative">
+            <span class="indicator-symbol" aria-hidden="true">×</span>
+            <div><strong>Negative</strong><p>Patient did not detect the tone</p></div>
+          </div>
+        </div>
+        <p id="responseMessage" class="response-message" role="status">No presentation yet.</p>
+      </section>
+
+      <section class="panel estimates-panel">
+        <div class="section-heading"><span class="section-index">06</span><h2>Threshold recording</h2></div>
+        <p class="helper">Enter your estimated threshold for each run. Estimates are not calculated automatically from the presentation history.</p>
+        <div class="recording-summary">
+          <div><span class="summary-label">Recorded estimates</span><strong id="completedCount">0/5</strong></div>
+          <div><span class="summary-label">Arithmetic mean</span><strong id="meanValue">— <small>dB HL</small></strong></div>
+        </div>
+        <div class="table-scroll estimates-scroll">
+          <table class="estimate-table">
+            <thead><tr><th>Run</th><th>Estimated threshold (dB HL)</th></tr></thead>
+            <tbody id="estimateBody"></tbody>
+          </table>
+        </div>
+        <button id="resetTableButton" class="button secondary full-width" type="button">Reset table</button>
+        <p id="estimateMessage" class="inline-message" role="status" aria-live="polite"></p>
+      </section>
+    </section>
+    <footer class="disclaimer"><strong>Educational use only.</strong> This simplified simulation is not a calibrated audiometer and must not be used for clinical diagnosis. Synthetic profiles do not establish a definitive hearing-loss type.</footer>
+  </main>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Interactive psychoacoustics lab for the Method of Constant Stimuli.">
+  <title>Method of Constant Stimuli | Auristerio Lab</title>
+  <link rel="stylesheet" href="constant_style.css">
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <script src="constant_script.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand-mark" aria-hidden="true">A</div>
+    <div class="brand-copy"><p class="eyebrow">AURISTERIO · PSYCHOACOUSTICS LAB</p><h1>Method of Constant Stimuli</h1></div>
+    <p class="header-note">Absolute threshold experiment</p>
+  </header>
+
+  <main>
+    <section class="patient-strip" aria-label="Patient and test settings">
+      <div class="patient-summary">
+        <p class="section-kicker">SIMULATED LISTENER</p>
+        <h2 id="patientName">Demo Patient</h2>
+        <p id="patientDetails" class="muted">35 years · Female</p>
+        <p id="chiefComplaint" class="complaint">No patient file loaded. Using the built-in demonstration threshold.</p>
+        <span id="patientStatus" class="status-pill">Demo mode</span>
+      </div>
+      <div class="setting-block">
+        <label for="targetEar">Target ear</label>
+        <select id="targetEar"><option value="right_ear">Right ear</option><option value="left_ear">Left ear</option></select>
+      </div>
+      <div class="setting-block">
+        <label for="targetFrequency">Target frequency</label>
+        <select id="targetFrequency">
+          <option value="250">250 Hz</option><option value="500">500 Hz</option><option value="1000" selected>1000 Hz</option><option value="2000">2000 Hz</option><option value="4000">4000 Hz</option><option value="8000">8000 Hz</option>
+        </select>
+      </div>
+      <div class="import-block">
+        <label class="file-button" for="patientFile">Import patient JSON</label>
+        <input id="patientFile" type="file" accept=".json,application/json">
+        <p class="small-note">Uses the patient's ear-specific thresholds.</p>
+        <button id="loadDemoBtn" class="text-button" type="button">Return to demo patient</button>
+      </div>
+    </section>
+
+    <div id="message" class="message" role="status" aria-live="polite" hidden></div>
+
+    <section class="lab-grid">
+      <article class="panel experiment-panel">
+        <div class="panel-heading"><div><p class="section-kicker">01 / EXPERIMENT</p><h2>Stimulus settings</h2></div><span class="panel-index">TEST</span></div>
+        <div class="panel-content">
+          <div class="threshold-context"><span class="context-dot"></span><div><strong>Simulated patient response</strong><p>The true threshold is used internally and is not displayed to the learner.</p></div></div>
+          <div class="field-block">
+            <label for="presentTimes">Presentations per stimulus level</label>
+            <div class="number-with-unit"><input id="presentTimes" type="number" min="1" max="100" step="1" value="5"><span>trials</span></div>
+            <p class="help-text">Each level is presented this many times during a run.</p>
+          </div>
+          <div class="field-block">
+            <div class="field-title-row"><label>Stimulus levels</label><span class="unit-label">dB HL</span></div>
+            <p class="help-text">Adjust the eight levels before presenting the trial set.</p>
+            <div class="samples-grid" id="samplesGrid">
+              <label class="sample-card"><span>Level 1</span><div><input id="slm1" type="number" value="0" step="1"><small>dB HL</small></div></label>
+              <label class="sample-card"><span>Level 2</span><div><input id="slm2" type="number" value="2" step="1"><small>dB HL</small></div></label>
+              <label class="sample-card"><span>Level 3</span><div><input id="slm3" type="number" value="4" step="1"><small>dB HL</small></div></label>
+              <label class="sample-card"><span>Level 4</span><div><input id="slm4" type="number" value="6" step="1"><small>dB HL</small></div></label>
+              <label class="sample-card"><span>Level 5</span><div><input id="slm5" type="number" value="8" step="1"><small>dB HL</small></div></label>
+              <label class="sample-card"><span>Level 6</span><div><input id="slm6" type="number" value="10" step="1"><small>dB HL</small></div></label>
+              <label class="sample-card"><span>Level 7</span><div><input id="slm7" type="number" value="12" step="1"><small>dB HL</small></div></label>
+              <label class="sample-card"><span>Level 8</span><div><input id="slm8" type="number" value="14" step="1"><small>dB HL</small></div></label>
+            </div>
+          </div>
+          <div class="action-row"><button id="presentBtn" class="primary-button" type="button">Present stimulus set <span aria-hidden="true">→</span></button><button id="resetBtn" class="secondary-button" type="button">Reset results</button></div>
+          <p class="small-note">Responses are simulated probabilistically for teaching; this is not a calibrated clinical test.</p>
+        </div>
+      </article>
+
+      <article class="panel results-panel">
+        <div class="panel-heading"><div><p class="section-kicker">02 / OBSERVATIONS</p><h2>Response summary</h2></div><span class="panel-index">RESULTS</span></div>
+        <div class="panel-content">
+          <p class="results-intro">Number of positive responses at each level, shown as count and percentage.</p>
+          <div class="table-wrap"><table class="results-table"><thead><tr><th>Level</th><th>Presented</th><th>Heard</th><th>Positive</th></tr></thead><tbody id="resultsBody"></tbody></table></div>
+          <div class="chart-heading"><div><h3>Psychometric response curve</h3><p>Positive responses across stimulus levels</p></div><span class="chart-key"><i></i> Positive responses</span></div>
+          <div id="plot" aria-label="Plot of positive response percentage by stimulus level"></div>
+          <div class="interpretation" id="interpretation">Present the stimulus set to populate the response table and plot.</div>
+        </div>
+      </article>
+    </section>
+    <footer><span>Teaching simulation · Method of Constant Stimuli</span><span>Designed for learning, not diagnosis</span></footer>
+  </main>
+</body>
+</html>

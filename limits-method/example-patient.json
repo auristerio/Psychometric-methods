@@ -1,0 +1,22 @@
+{
+  "name": "Alice",
+  "age": 35,
+  "sex": "Female",
+  "chief_compliant": "Hearing loss in both ears especially right one",
+  "right_ear": {
+    "250": 40,
+    "500": 45,
+    "1000": 55,
+    "2000": 60,
+    "4000": 65,
+    "8000": 75
+  },
+  "left_ear": {
+    "250": 30,
+    "500": 30,
+    "1000": 35,
+    "2000": 40,
+    "4000": 45,
+    "8000": 60
+  }
+}

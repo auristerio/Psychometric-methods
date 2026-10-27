@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#e8e5dc">
+  <title>Adjustment Method · Psychoacoustics Lab</title>
+  <link rel="stylesheet" href="./adjustment_style.css">
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <script src="./adjustment_script.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="wordmark" href="#" aria-label="Psychoacoustics Lab home">
+        <span class="wordmark-mark">A</span>
+        <span><strong>Auristerio</strong><small>PSYCHOACOUSTICS LAB</small></span>
+      </a>
+      <div class="topbar-meta"><span class="status-dot"></span> Interactive teaching simulator</div>
+    </header>
+
+    <main>
+      <section class="page-intro">
+        <div>
+          <p class="eyebrow">THRESHOLD MEASUREMENT · METHOD 02</p>
+          <h1>Adjustment method</h1>
+          <p class="intro-copy">Explore how a listener’s responses change as you adjust stimulus intensity. Watch the sweep, listen to the tone, and estimate the threshold from the reversals.</p>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <aside class="panel setup-panel">
+          <div class="panel-heading">
+            <div><p class="section-kicker">01 / CONFIGURATION</p><h2>Patient & setup</h2></div>
+            <span class="heading-icon">↗</span>
+          </div>
+
+          <div class="patient-card">
+            <div class="patient-avatar" aria-hidden="true">P</div>
+            <div class="patient-copy"><span class="field-label">CURRENT LISTENER</span><strong id="patientName">Random patient</strong><span id="patientMeta" class="muted">Threshold profile · 500 Hz</span></div>
+            <span class="patient-tag" id="patientTag">SIMULATED</span>
+          </div>
+
+          <label class="field-label" for="patientFile">PATIENT JSON FILE</label>
+          <div class="file-control">
+            <input id="patientFile" type="file" accept=".json,application/json">
+            <span class="file-hint">Import a patient profile</span>
+          </div>
+          <p class="helper-text" id="importStatus" role="status">Choose a JSON file to load a patient.</p>
+
+          <div class="field-grid">
+            <div class="field">
+              <label for="targetEar">Target ear</label>
+              <select id="targetEar">
+                <option value="right_ear" selected>Right ear</option>
+                <option value="left_ear">Left ear</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="targetFrequency">Frequency</label>
+              <select id="targetFrequency">
+                <option value="250">250 Hz</option><option value="500" selected>500 Hz</option>
+                <option value="1000">1 kHz</option><option value="2000">2 kHz</option>
+                <option value="4000">4 kHz</option><option value="8000">8 kHz</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field-grid">
+            <div class="field">
+              <label for="startLevel">Starting level</label>
+              <div class="input-unit"><input id="startLevel" type="number" min="-10" max="120" step="5" value="70"><span>dB HL</span></div>
+            </div>
+            <div class="field">
+              <label for="stepSize">Step size</label>
+              <select id="stepSize"><option value="1">1 dB</option><option value="2">2 dB</option><option value="5" selected>5 dB</option><option value="10">10 dB</option></select>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+          <div class="panel-heading compact">
+            <div><p class="section-kicker">02 / RESPONSE MODEL</p><h2>Listener behavior</h2></div>
+          </div>
+          <div class="model-note"><span class="model-glyph">ƒ</span><p><strong>Probabilistic response</strong><br><span>Responses vary around the hidden threshold, rather than switching at one exact level.</span></p></div>
+          <label class="range-label" for="slope">Psychometric spread <strong id="slopeValue">0.7</strong></label>
+          <input id="slope" class="range-input" type="range" min="0.3" max="2" step="0.1" value="0.7">
+          <div class="range-ends"><span>More consistent</span><span>More variable</span></div>
+          <button id="newPatientBtn" class="button button-secondary full-width" type="button"><span aria-hidden="true">↻</span> Generate random patient</button>
+        </aside>
+
+        <section class="panel experiment-panel">
+          <div class="panel-heading">
+            <div><p class="section-kicker">03 / LIVE EXPERIMENT</p><h2>Intensity control</h2></div>
+            <span class="live-badge"><span class="status-dot"></span><span id="sessionStatus">READY</span></span>
+          </div>
+          <div class="stimulus-stage">
+            <div class="stimulus-topline"><span>STIMULUS INTENSITY</span><span id="levelBounds">−10 to 120 dB HL</span></div>
+            <div class="level-readout"><strong id="sweepValue">70</strong><span>dB HL</span></div>
+            <div class="level-track" aria-hidden="true"><div id="levelTrackFill" class="level-track-fill"></div><span id="levelTrackMarker" class="level-track-marker"></span></div>
+            <div class="level-scale"><span>−10</span><span>30</span><span>70</span><span>120 dB HL</span></div>
+
+            <div class="hand-state">
+              <div class="hand-image-wrap"><img src="./images/releasing.png" id="handImage" alt="Illustration of a hand releasing the response button"></div>
+              <div class="hand-copy"><span class="field-label">SIMULATED LISTENER ACTION</span><strong id="handStateTitle">Releasing the button</strong><p id="handStateCopy">The tone is not reliably audible at this level.</p></div>
+            </div>
+            <div class="direction-indicators">
+              <div id="ascendBox" class="direction-card active"><span class="direction-arrow">↑</span><span><strong>Ascending</strong><small>Level increases</small></span><span class="direction-light"></span></div>
+              <div id="descendBox" class="direction-card"><span class="direction-arrow">↓</span><span><strong>Descending</strong><small>Level decreases</small></span><span class="direction-light"></span></div>
+            </div>
+            <div class="control-row">
+              <button id="mainStartBtn" class="button button-primary" type="button"><span aria-hidden="true">▶</span> Start sweep</button>
+              <button id="pauseBtn" class="button button-secondary" type="button" disabled>Pause</button>
+              <button id="resetBtn" class="button button-quiet" type="button">Reset session</button>
+            </div>
+            <p class="helper-text audio-note"><span aria-hidden="true">♪</span> Web Audio tone at 500 Hz. Playback loudness depends on your device and is not calibrated clinical output.</p>
+          </div>
+        </section>
+
+        <section class="panel results-panel">
+          <div class="panel-heading">
+            <div><p class="section-kicker">04 / OBSERVATIONS</p><h2>Intensity over time</h2></div>
+            <span class="chart-legend"><i></i> Recorded level</span>
+          </div>
+          <div id="plot" class="plot-area" aria-label="Live plot of stimulus intensity over time"></div>
+          <div class="results-footer">
+            <div><span class="field-label">PRESENTATIONS</span><strong id="presentationCount">0</strong></div>
+            <div><span class="field-label">DIRECTION CHANGES</span><strong id="reversalCount">0</strong></div>
+            <div><span class="field-label">LAST RESPONSE</span><strong id="lastResponse">—</strong></div>
+          </div>
+          <div class="observation-note"><span class="note-mark">i</span><p><strong>Interpretation</strong><br>The graph shows the stimulus level selected during each step. Use repeated reversals to form your own threshold estimate; the simulated patient’s actual threshold remains hidden.</p></div>
+        </section>
+      </section>
+
+      <footer class="page-footer"><span>LEARNING ENVIRONMENT · NOT FOR CLINICAL DIAGNOSIS</span><span>ADJUSTMENT METHOD <i>•</i> PSYCHOACOUSTICS</span></footer>
+    </main>
+  </div>
+</body>
+</html>
