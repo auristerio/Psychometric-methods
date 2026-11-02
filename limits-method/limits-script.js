@@ -36,7 +36,8 @@
     minusButton: $("minusButton"), plusButton: $("plusButton"), presentButton: $("presentButton"),
     positiveIndicator: $("positiveIndicator"), negativeIndicator: $("negativeIndicator"),
     responseMessage: $("responseMessage"), estimateBody: $("estimateBody"), completedCount: $("completedCount"),
-    meanValue: $("meanValue"), resetTableButton: $("resetTableButton"), estimateMessage: $("estimateMessage")
+    meanValue: $("meanValue"), resetTableButton: $("resetTableButton"), estimateMessage: $("estimateMessage"),
+    submitBtn: $("submitBtn"), userEstimation: $("userEstimation")
   };
 
   function validatePatient(patient) {
@@ -406,6 +407,27 @@
     return value.charAt(0).toUpperCase() + value.slice(1);
   }
 
+  function submitAnswer() {
+    const userEstimation = Number(els.userEstimation.value);
+
+    const threshold =
+      state.patient[state.selectedEar][state.selectedFrequency];
+
+    const responseElement = $("responseElement");
+
+    if (els.userEstimation.value.trim() === "" || !Number.isFinite(userEstimation)) {
+      responseElement.textContent = "Please enter a valid threshold estimation.";
+      return;
+    }
+
+    if (userEstimation === threshold) {
+      responseElement.textContent = `Correct! The threshold is ${threshold} dB HL.`;
+    } else {
+      responseElement.textContent = `Incorrect. The correct threshold is ${threshold} dB HL.`;
+    }
+  }
+
+
   function attachEvents() {
     els.importButton.addEventListener("click", () => els.patientFile.click());
     els.patientFile.addEventListener("change", (event) => importPatientFile(event.target.files[0]));
@@ -427,6 +449,7 @@
     els.plusButton.addEventListener("click", () => adjustStimulus(state.stepSize));
     els.presentButton.addEventListener("click", presentStimulus);
     els.resetTableButton.addEventListener("click", resetEstimateTable);
+    els.submitBtn.addEventListener("click", submitAnswer);
   }
 
   attachEvents();

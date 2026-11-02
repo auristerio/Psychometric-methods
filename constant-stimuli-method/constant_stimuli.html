@@ -23,7 +23,6 @@
         <h2 id="patientName">Demo Patient</h2>
         <p id="patientDetails" class="muted">35 years · Female</p>
         <p id="chiefComplaint" class="complaint">No patient file loaded. Using the built-in demonstration threshold.</p>
-        <span id="patientStatus" class="status-pill">Demo mode</span>
       </div>
       <div class="setting-block">
         <label for="targetEar">Target ear</label>
@@ -38,7 +37,6 @@
       <div class="import-block">
         <label class="file-button" for="patientFile">Import patient JSON</label>
         <input id="patientFile" type="file" accept=".json,application/json">
-        <p class="small-note">Uses the patient's ear-specific thresholds.</p>
         <button id="loadDemoBtn" class="text-button" type="button">Return to demo patient</button>
       </div>
     </section>
@@ -49,7 +47,6 @@
       <article class="panel experiment-panel">
         <div class="panel-heading"><div><p class="section-kicker">01 / EXPERIMENT</p><h2>Stimulus settings</h2></div><span class="panel-index">TEST</span></div>
         <div class="panel-content">
-          <div class="threshold-context"><span class="context-dot"></span><div><strong>Simulated patient response</strong><p>The true threshold is used internally and is not displayed to the learner.</p></div></div>
           <div class="field-block">
             <label for="presentTimes">Presentations per stimulus level</label>
             <div class="number-with-unit"><input id="presentTimes" type="number" min="1" max="100" step="1" value="5"><span>trials</span></div>
@@ -84,8 +81,14 @@
           <div class="interpretation" id="interpretation">Present the stimulus set to populate the response table and plot.</div>
         </div>
       </article>
+      <article class="panel results-panel">
+        <div class="panel-heading"><div><p class="section-kicker">03 / SUBMIT</p><h2>Submit Answers</h2></div></div>
+          <p class="helper" style="margin-left: 5px; margin-bottom: 5px;">Enter your estimated threshold here, your result can be 5dB off</p>
+          <input style="margin-left: 20px;" type="number" id="userEstimation">
+          <button id="submitBtn" class="button button-secondary full-width" type="button"><span aria-hidden="true">✔</span>Submit</button>
+          <p id="responseElement"></p>
+      </article>
     </section>
-    <footer><span>Teaching simulation · Method of Constant Stimuli</span><span>Designed for learning, not diagnosis</span></footer>
   </main>
 </body>
 </html>

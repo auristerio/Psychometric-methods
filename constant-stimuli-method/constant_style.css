@@ -518,6 +518,39 @@ main {
     min-height: 42px
 }
 
+.helper {
+    margin: 12px 0 0;
+    color: var(--muted);
+    font-size: .77rem;
+    line-height: 1.55;
+}
+
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 43px;
+    padding: 0 16px;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    font-size: 12px;
+    font-weight: 700;
+    transition: background .18s ease, transform .18s ease, border-color .18s ease;
+}
+
+.full-width { width: 100%; margin-top: 20px; }
+
+.button-secondary {
+    border-color: #d9d6cb;
+    background: #fffefa;
+    color: var(--ink);
+}
+
+.button-secondary:hover:not(:disabled) {
+    background: var(--olive-pale);
+}
+
 footer {
     display: flex;
     justify-content: space-between;

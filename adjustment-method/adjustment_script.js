@@ -8,16 +8,18 @@
     reset: $("resetBtn"), newPatient: $("newPatientBtn"), file: $("patientFile"),
     importStatus: $("importStatus"), patientName: $("patientName"), patientMeta: $("patientMeta"),
     patientTag: $("patientTag"), ear: $("targetEar"), frequency: $("targetFrequency"),
-    startLevel: $("startLevel"), stepSize: $("stepSize"), slope: $("slope"),
-    slopeValue: $("slopeValue"), levelFill: $("levelTrackFill"), levelMarker: $("levelTrackMarker"),
+    startLevel: $("startLevel"), stepSize: $("stepSize"),
+    levelFill: $("levelTrackFill"), levelMarker: $("levelTrackMarker"),
     handTitle: $("handStateTitle"), handCopy: $("handStateCopy"), sessionStatus: $("sessionStatus"),
-    count: $("presentationCount"), reversals: $("reversalCount"), lastResponse: $("lastResponse")
+    count: $("presentationCount"), reversals: $("reversalCount"), lastResponse: $("lastResponse"),
+    submitBtn: $("submitBtn"), userEstimation: $("userEstimation")
   };
 
   const FREQUENCIES = ["250", "500", "1000", "2000", "4000", "8000"];
   const MIN_LEVEL = -10;
   const MAX_LEVEL = 120;
   const PRESENTATION_MS = 700;
+  const MAX_PRESENTATIONS = 20;
   const DEFAULT_PATIENT = {
     name: "Random patient", age: 35, sex: "Not specified",
     chief_compliant: "Simulated hearing threshold profile",
@@ -89,11 +91,11 @@
   }
 
   function psychometricProbability(stimulusLevel) {
-    // Logistic psychometric function. The hidden threshold is the 50% point.
-    const spread = Math.max(0.1, Number(el.slope.value));
+    const spread = 0.7; // Fixed psychometric spread
     const z = Math.max(-30, Math.min(30, (stimulusLevel - threshold) / spread));
     return 1 / (1 + Math.exp(-z));
   }
+
 
   function simulateResponse(stimulusLevel) {
     return Math.random() < psychometricProbability(stimulusLevel);
@@ -122,7 +124,6 @@
 
   function setSoundLevel(dbHL) {
     if (!gainNode || !audioContext || audioContext.state === "closed") return;
-    // This is a demonstration mapping only, not calibrated dB HL output.
     const normalized = 0.2 * Math.pow(10, ((dbHL - 70) * 0.25) / 20);
     const gain = Math.max(0, Math.min(0.7, normalized));
     gainNode.gain.setTargetAtTime(gain, audioContext.currentTime, 0.025);
@@ -138,7 +139,7 @@
     silenceAudio();
     if (audioContext && audioContext.state !== "closed") {
       const oldContext = audioContext;
-      setTimeout(() => oldContext.close().catch(() => {}), 80);
+      setTimeout(() => oldContext.close().catch(() => { }), 80);
     }
     audioContext = oscillator = gainNode = null;
   }
@@ -237,6 +238,22 @@
       el.pause.disabled = true;
       return;
     }
+    if (presentationIndex >= MAX_PRESENTATIONS) {
+      stopTimer();
+      running = false;
+      paused = false;
+
+      silenceAudio();
+
+      el.sessionStatus.textContent = "SESSION COMPLETED";
+      el.start.disabled = false;
+      el.start.innerHTML = '<span aria-hidden="true">▶</span> Start sweep';
+      el.pause.disabled = true;
+      el.pause.textContent = "Pause";
+
+      return;
+    }
+
     timer = setTimeout(presentStep, PRESENTATION_MS);
   }
 
@@ -350,14 +367,39 @@
     drawPlot();
   }
 
+
+  function submitAnswer() {
+    const rawEstimation = el.userEstimation.value.trim();
+    const responseElement = $("responseElement");
+
+    if (rawEstimation === "" || !Number.isFinite(Number(rawEstimation))) {
+      responseElement.textContent = "Please enter a valid threshold estimation.";
+      return;
+    }
+
+    const userEstimation = Number(rawEstimation);
+
+    // Get the actual threshold for the currently selected ear and frequency
+    const correctThreshold = patient[el.ear.value][el.frequency.value];
+
+    if (Math.abs(userEstimation - correctThreshold) <= 5) {
+      responseElement.textContent =
+        `Correct! The actual threshold is ${correctThreshold} dB HL.`;
+    } else {
+      responseElement.textContent =
+        `Incorrect. The actual threshold is ${correctThreshold} dB HL.`;
+    }
+  }
+
+
   el.file.addEventListener("change", (event) => importPatientFile(event.target.files[0]));
   el.ear.addEventListener("change", () => { syncPatient(); resetSession({ keepLevel: false }); });
   el.frequency.addEventListener("change", () => { syncPatient(); resetSession({ keepLevel: false }); });
   el.stepSize.addEventListener("change", () => { if (running) pauseSweep(); });
-  el.slope.addEventListener("input", () => { el.slopeValue.textContent = Number(el.slope.value).toFixed(1); });
   el.start.addEventListener("click", startSweep);
   el.pause.addEventListener("click", pauseSweep);
   el.reset.addEventListener("click", () => resetSession({ keepLevel: false }));
+  el.submitBtn.addEventListener("click", submitAnswer);
   el.newPatient.addEventListener("click", generateRandomPatient);
   el.startLevel.addEventListener("change", () => {
     if (!running && !points.length) {

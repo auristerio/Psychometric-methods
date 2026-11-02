@@ -16,7 +16,8 @@
     patientStatus: $('patientStatus'), patientFile: $('patientFile'), targetEar: $('targetEar'),
     targetFrequency: $('targetFrequency'), presentTimes: $('presentTimes'), presentBtn: $('presentBtn'),
     resetBtn: $('resetBtn'), loadDemoBtn: $('loadDemoBtn'), resultsBody: $('resultsBody'),
-    message: $('message'), interpretation: $('interpretation')
+    message: $('message'), interpretation: $('interpretation'), submitBtn: $('submitBtn'),
+    userEstimation: $('userEstimation'), responseElement: $('responseElement')
   };
 
   let patient = structuredCloneSafe(DEMO_PATIENT);
@@ -173,6 +174,31 @@
     }
   }
 
+  
+function submitAnswer() {
+  const rawEstimation = els.userEstimation.value.trim();
+
+  if (rawEstimation === '' || !Number.isFinite(Number(rawEstimation))) {
+    els.responseElement.textContent =
+      'Please enter a valid threshold estimation.';
+    return;
+  }
+
+  const userEstimation = Number(rawEstimation);
+  const correctThreshold = getThreshold();
+
+  const difference = Math.abs(userEstimation - correctThreshold);
+
+  if (difference <= 5) {
+    els.responseElement.textContent =
+      `Correct! The actual threshold is ${correctThreshold} dB HL. `
+  } else {
+    els.responseElement.textContent =
+      `Incorrect. The actual threshold is ${correctThreshold} dB HL. `
+  }
+}
+
+
   els.patientFile.addEventListener('change', async (event) => {
     const file = event.target.files && event.target.files[0];
     if (!file) return;
@@ -195,6 +221,7 @@
   samples.forEach(input => input.addEventListener('input', resetResults));
   els.presentTimes.addEventListener('change', resetResults);
   els.presentBtn.addEventListener('click', runExperiment);
+  els.submitBtn.addEventListener('click', submitAnswer);
   els.resetBtn.addEventListener('click', () => { clearMessage(); resetResults(); });
   els.loadDemoBtn.addEventListener('click', () => {
     patient = structuredCloneSafe(DEMO_PATIENT);

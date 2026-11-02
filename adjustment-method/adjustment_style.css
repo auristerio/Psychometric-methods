@@ -123,6 +123,7 @@ h1, h2, p { margin-top: 0; }
 .observation-note strong { color: var(--ink); }
 .page-footer { display: flex; justify-content: space-between; gap: 15px; padding: 22px 0 8px; color: #8a897f; font-size: 8px; font-weight: 700; letter-spacing: 1.2px; }
 .page-footer i { padding: 0 4px; font-style: normal; }
+.helper { margin: 12px 0 0; color: var(--muted); font-size: .77rem; line-height: 1.55; }
 @media (min-width: 1200px) { .workspace { grid-template-columns: minmax(290px, .82fr) minmax(380px, 1.18fr); } }
 @media (max-width: 900px) { .app-shell { padding: 0 22px; } .workspace { grid-template-columns: 1fr 1fr; } .setup-panel { grid-row: auto; } .experiment-panel { grid-column: 2; } .results-panel { grid-column: 1 / -1; } }
 @media (max-width: 650px) { .app-shell { padding: 0 14px; } .topbar { min-height: 66px; } .topbar-meta { font-size: 0; } .topbar-meta .status-dot { width: 8px; height: 8px; } main { padding-top: 25px; } .page-intro { align-items: flex-start; } .method-stamp { width: 68px; height: 68px; } .method-stamp strong { font-size: 24px; } .method-stamp span, .method-stamp small { font-size: 6px; } .workspace { grid-template-columns: 1fr; } .setup-panel, .experiment-panel, .results-panel { grid-column: auto; padding: 18px; } .panel-heading h2 { font-size: 23px; } .level-readout strong { font-size: 61px; } .control-row .button { flex: 1; } .page-footer { flex-direction: column; } }
